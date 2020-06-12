@@ -319,7 +319,6 @@ This was fixed after I rebased from master to refs/remotes/origin/master. Thus, 
 Although the priority is to write the TCP/IP client code for the app, I would like to add subitems into the list view for the Discovery fragment. 
 
 \labday{Thursday, June 11, 2020}
-Today, I drew the below figure in Inkscape:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{figs/inkscape/mappingRobotArchitecture.eps}
@@ -327,8 +326,8 @@ Today, I drew the below figure in Inkscape:
 \end{figure}
 \noindent
 Description:
-\smallbreak\noindent
-The proposed cleaning and mapping robot will have the ability to collect sensor data from multiple onboard sensors like an IR sensor, cliff sensor, gyroscope sensor, IMU, LIDAR, and ultrasonic sensor connected to a single board computer (Beaglebone Blue) for the purpose of localization and mapping. With the aid of the computer, the robot will be able to successfully map its environment like a floor of a house or building. For visualizing the fully completed map, an Android app will be developed to display the outcome of the mapping graphically. Built-in WiFi support of the Beaglebone will act as the communication medium between the robot and client. Other 
+\smallbreak
+The proposed cleaning and mapping robot based off the Roomba vacuum by iRobot will have the ability to collect sensor data from multiple onboard sensors connected to a single board computer (Beaglebone Blue) for the purpose of localization and mapping. IR sensors, ultrasonic sensors, cliff sensors, and LIDAR will help the robot to understand its environment better. The IMU and gyroscope will help to track orientation, velocity, and rotation. With the aid of the computer, the robot will be able to successfully map its environment like a floor of a house or building. The LIDAR sensor will perform a continuous $360^\circ$ sweep of the environment to generate a $2$D map of the environment. For visualizing the fully completed map, an Android app will be developed to display the outcome of the mapping graphically. Built-in WiFi support of the Beaglebone will act as the communication medium between the robot and client. iRobot has developed a technology of their own that can perform mapping of an area and identify areas of high dirt or dust concentration. However, the robot to be developed will seek to use cost effective sensors to clean the floor and build a map of the environment. The robot will exhibit human like reasoning and intelligence like sight and memory through storage of maps on the Beaglebone. Techniques like artificial intelligence will be deployed for improving the human like perception abilities of the device even further. 
 \end{addmargin}
 
 %----------------------------------------------------------------------------------------
