@@ -328,6 +328,70 @@ Although the priority is to write the TCP/IP client code for the app, I would li
 Description:
 \smallbreak
 The proposed cleaning and mapping robot based off the Roomba vacuum by iRobot will have the ability to collect sensor data from multiple onboard sensors connected to a single board computer (Beaglebone Blue) for the purpose of localization and mapping. IR sensors, ultrasonic sensors, cliff sensors, and LIDAR will help the robot to understand its environment better. The IMU and gyroscope will help to track orientation, velocity, and rotation. With the aid of the computer, the robot will be able to successfully map its environment like a floor of a house or building. The LIDAR sensor will perform a continuous $360^\circ$ sweep of the environment to generate a $2$D map of the environment. For visualizing the fully completed map, an Android app will be developed to display the outcome of the mapping graphically. Built-in WiFi support of the Beaglebone will act as the communication medium between the robot and client. iRobot has developed a technology of their own that can perform mapping of an area and identify areas of high dirt or dust concentration. However, the robot to be developed will seek to use cost effective sensors to clean the floor and build a map of the environment. The robot will exhibit human like reasoning and intelligence including perception and memory through storage of maps on the single board computer. Techniques like artificial intelligence will be deployed for improving the human like perception abilities of the device even further. 
+
+\labday{Tuesday, June 16, 2020}
+Brian:
+I found a blog post on the Internet detailing how to implement a network scanning feature in Android\footnote{\url{https://cheesecakelabs.com/blog/developing-iot-apps-connecting-smart-devices/}}. At the end of section 1, it states that networking code should not run in the UI. In other words, a separate thread of execution must be created for network operations. In this case, scanning all IP addresses on a subnet is the task at hand. I worked on understanding the method \texttt{getIpv4Netmask()} which should return the network prefix length or in other words the number of bits in the network portion of the IP address. However I tried the code out in Eclipse and received a \texttt{NullPointerException}. This may have to do with passing the wrong IP address as a parameter into the method call. To try and understand what IP address should be passed in an argument, I used the lines
+\begin{Verbatim}
+WifiManager wifiManger = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+DhcpInfo dhcpInfo = wifiManger.getDhcpInfo();
+\end{Verbatim}
+in the \texttt{onCreate} method of the \texttt{MainActivity} class. However, the  \texttt{getDhcpInfo} call was returning an error as the WifiManager is missing permissions. What I found is that the permission \texttt{ACCESS\_WIFI\_STATE} is required in the Android Manifest file which is accomplished by adding the line.
+\begin{Verbatim}
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+\end{Verbatim}
+to the AndroidManifest.xml file. Also, I changed the lines to 
+\begin{Verbatim}
+WifiManager wifiManager = (WifiManager) getContext().getApplicationContext()
+.getSystemService(Context.WIFI_SERVICE);
+DhcpInfo dhcpInfo = wifiManager.getDhcpInfo();
+\end{Verbatim}
+As a test, since the wifi is not enabled on the emulator, I downloaded the app to a test Moto E phone. An added \texttt{dhcpInfo.ipAddress} to the the list of items. It displays the integer $318810304$ which by using a decimal to IP converter I found the this represents the IP address 192.168.0.19.
+
+\labday{Wednesday, June 17, 2020}
+Since I was having problems with finding the prefix length with the getIpv4Netmask provided in the footnote above, I decided to rather get the localhost of the device and get the network interfaces attached. In this way, hopefully a null reference exception will be avoided. Unfortunately, when I call \texttt{Inet4Address.getLocalHost()} the app crashes. I found that this is caused by a \texttt{NetworkOnMainThreadException} being thrown by the application as it was trying to perform a network operation on the main thread. I did not realize that it is absolutely required to add in a second thread to perform network operations. 
+\smallbreak\noindent
+I need to create another class in the \texttt{DiscoveryFragment} class that extends from the \texttt{AsyncTask} class. However, I discovered that the \texttt{AsyncTask} class was deprecated in API level 30. Instead I will use the more up to date \texttt{Executor} interface which contains one method: \texttt{execute}. In the implementation of the the \texttt{execute} method, it creates a new thread and starts it as follows:
+\begin{Verbatim}
+class TaskExecutor implements Executor {
+	public void execute(Runnable r) {
+		new Thread(r).start();
+	}
+}
+\end{Verbatim}
+Where \texttt{Runnable} is a second interface that adds the \texttt{run} method which will be executed when the thread is started. In the \texttt{run} method, I would like to get the network prefix of the subnet and add to the ArrayList to be added to the ListView in the android application. 
+\smallbreak\noindent
+This second issue to be solved is the issue of the \texttt{getLocalHost} method returning a \texttt{InetAddress} object bound to the IP address 127.0.0.1 rather than the actual address of the device. The network mask prefix of 127.0.0.1 is 8 rather than the expected 24 on my home network. After implementing some more of the code by using an instance of the DhcpInfo object, I was able to successfully display the prefix (24) in the app.
+
+\labday{Thursday, June 18, 2020}
+Today will be detected to searching for all devices under my networks subnet (255.255.255.0). I created a second task titled \texttt{ScanNetworkTask}. However, I would like to write a method that will be called in the \texttt{ScanNetworkTask} run method for obtaining the network prefix rather than using a separate thread to find the prefix. The purpose for doing this is to prevent a race condition with the class level member variable \texttt{mNetworkPrefix}. The problem I am having is that private member variables cannot be accessed from static methods in java. The variable I would like to reference is the instance of \texttt{DhcpInfo} which is initialized in the \texttt{onCreate} method of the \texttt{DiscoveryFragment} class. However, in the end, I just decided to add all the code including the code to determine the network prefix in a single task class titled \texttt{ScanSubnetTask}. The code after the network prefix code will loop from 192.168.0.0 up to 192.168.0.254 and ping each of those addresses by calling the \texttt{InetAddress.isReachable} method with a timeout of 80 ms. In the task, I decided to update the ArrayList with the list of reachable IP addresses. This causes an \texttt{IllegalStateException} because the background thread should not be sending notifications to the UI to update it. Correctly communicating with the UI from backgrounds will be necessary here \footnote{\url{https://developer.android.com/training/multiple-threads/communicate-ui}}.
+
+\labday{Friday, June 19, 2020}
+Today, I read through some of the android developer resources to determine how to update the UI from a background thread. A line that I found that should be added to the implementation of the \texttt{run} method is
+\begin{Verbatim}
+android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+\end{Verbatim}
+which moves the thread to the background. Inside the constructor of the \texttt{DiscoveryFragment} class I added an instance of an anonymous class which extends the \texttt{Handler} class will handle new message added to the task:
+\begin{Verbatim}
+    private DiscoveryFragment() {
+        // This is an anonymous class which extends the Handler class
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message inputMessage) {
+
+            }
+
+        };
+    }
+\end{Verbatim}
+The problem is I don't know how the invoke the handler and what type of message will be passed into the \texttt{handleMessage} method. It turns out the \texttt{sendMessage} method must be used. From the android developer docs \footnote{\url{https://developer.android.com/reference/android/os/Message}}, the \texttt{Message} class is used to define a message containing a description and data object to be sent to a handler. The \texttt{setData} must be called on an instance of the Message object in order to add data to the Message instance. When attempting to call the \texttt{sendMessage} method on the handler instance, I received the following exception:
+\begin{Verbatim}
+java.lang.IllegalStateException: 
+{ when=-14h27m43s520ms what=0 
+target=com.example.lidarmappingrobot.ui.main.DiscoveryFragment$1 } 
+This message is already in use.
+\end{Verbatim}
+%$
 \end{addmargin}
 
 %----------------------------------------------------------------------------------------
