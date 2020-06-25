@@ -392,6 +392,103 @@ target=com.example.lidarmappingrobot.ui.main.DiscoveryFragment$1 }
 This message is already in use.
 \end{Verbatim}
 %$
+
+\labday{Monday, June 22, 2020}
+One of the problems I discovered in my code, is that the \texttt{Message.sendMessage(Message)} method was being called inside a for loop. Thus, the same \texttt{Message} object was likely being used multiple times causing some issues. After adding the \texttt{sendMessage} call after the for loop the exception went away. However, no IP addresses were being listed in the Discovery page. Instead of assigning the \texttt{obj} field of the Message object to the ArrayList, I decided to uses \texttt{Bundle} and the \texttt{putStringArrayList} method to set the data on the message. Now the problem appears to be that \texttt{handleMessage} is not being called which I added the single line to 
+\begin{Verbatim}
+mArrayList.add("Null pointer exception here!");
+\end{Verbatim}
+I realized I forgot to assign the \texttt{Bundle} object which is used for storing the String \texttt{ArrayList} and sending to the \texttt{Handler} over a \texttt{Message} to the output of \texttt{Message.getData()}.
+\smallbreak\noindent
+A large problem I found in the current implementation of the subnet scanner I have adapted and built is that it takes at least 5-6 seconds in order to finish the call to \texttt{getByAddress} on the \texttt{InetAddress} object. This leads to the app taking over 10 minutes to finishing scanning all the devices. It turns out the call to \texttt{InetAddress.getHostName} takes a long time to call as it performs a DNS lookup under the hood. Therefore, a different approach may need to be taken instead. A solution was quickly found from the Stack Overflow post \footnote{\url{https://stackoverflow.com/questions/10420317/java-inetaddress-gethostname-taking-a-very-long-time-to-execute}}, the \texttt{InetAddress.toString} method will simply print a slash and the name of the address instantly without any system call. A problem I am having is the inability to determine if addresses are reachable with the \texttt{InetAddress.isReachable} method.
+
+\labday{Tuesday, June 23, 2020}
+Since I realized that scanning every single device on the network is not a good idea as it will take a long time, I decided to try to setup the SBC as a wireless access point. Because I don't have a Beaglebone, I will use a RPi instead given directions from stack exchange\footnote{\url{https://raspberrypi.stackexchange.com/questions/66700/tcp-communication-with-android-via-wifi}}. For this, I will follow the tutorial at \footnote{\url{https://www.raspberrypi.org/documentation/configuration/wireless/access-point-routed.md}} as the link provided in the previous url on stack exchange was returning a 404 error. However, I discovered that the RPi must be connected to the rest of the network via Ethernet, so this may not be a viable option either. A better alternative I found is using multicast sockets over UDP which would be more ideal in terms of speed \footnote{\url{https://pymotw.com/2/socket/multicast.html}}. The following code should be adapted for android to send data to the receiver (the Beaglebone).
+\begin{Verbatim}
+import socket
+import struct
+import sys
+
+message = 'very important data'.encode('utf-8')
+multicast_group = ('224.3.29.71', 10000)
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+sock.settimeout(0.2)
+
+ttl = struct.pack('b',1)
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
+
+sent = sock.sendto(message, multicast_group)
+print('sent message')
+while True:
+    print('waiting to receive')
+    try:
+        data, server = sock.recvfrom(16)
+    except socket.timeout:
+        print('timed out')
+        break
+    else:
+        print(data)
+
+sock.close()
+\end{Verbatim}
+The following receiver code should be added onto for pulling lidar data from the robot that the bone is connected to:
+\begin{Verbatim}
+import socket
+import struct
+import sys
+
+multicast_group = '224.3.29.71'
+server_address = ('', 10000)
+
+# Create the socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# Bind to the server address
+sock.bind(server_address)
+# Tell the operating system to add the socket to the multicast group
+# on all interfaces.
+group = socket.inet_aton(multicast_group)
+mreq = struct.pack('4sL', group, socket.INADDR_ANY)
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
+# Receive/respond loop
+while True:
+    print >>sys.stderr, '\nwaiting to receive message'
+    data, address = sock.recvfrom(1024)
+    
+    print >>sys.stderr, 'received %s bytes from %s' % (len(data), address)
+    print >>sys.stderr, data
+
+    print >>sys.stderr, 'sending acknowledgement to', address
+    sock.sendto('ack', address)
+\end{Verbatim}
+Luckily, there is a class in the Android SDK specifically for multicast communication, \texttt{MulticastSocket}. One of the problems I am running into is how to properly obtain the IP address from the received datagram packet from the remote listener on the RPi. In other words after the call to \texttt{DatagramSocket.receive}, the argument passed to the method should receive the message received and have the ip and port of the remote host encoded in it. What I discovered is that a message must be received multiple times in order to properly receive the message from the server. However, when I restart the app, the packet sometimes gets lost and my code gets stuck in an infinite loop. A potential solution is to add a refresh button to look for devices in case the app did not get a response.
+
+\labday{Wednesday, June 24, 2020}
+I altered the code inside the \texttt{run} method of the \texttt{FindRobotTask} class to only iterate up to 10 times to receive a message from the SBC. This will prevent the infinite loop issue. Next what I would like to do is add in a floating action button to refresh whenever devices don't show up in the list view. The code is fairly simple as all I have to do is call \texttt{setOnItemClickListener} on the \texttt{FloatingActionButton} object:
+\begin{Verbatim}
+FloatingActionButton fab = (FloatingActionButton) discoveryView.findViewById(R.id.fab);
+fab.setOnClickListener(new View.OnClickListener() {
+	@Override
+	public void onClick(View v) {
+		mArrayList.add("Refreshed");
+		new Thread(new FindRobotTask()).start();
+	}
+});
+\end{Verbatim}
+However, the problem I have is the Refreshed string is not being properly added to the array list every time as it is not showing in the ListView. I added the line
+\begin{Verbatim}
+Snackbar.make(discoveryView, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+\end{Verbatim}
+in the definition of the \texttt{onClick} method which creates a pop up at the bottom of the screen whenever the button is clicked. This appears to work but items are still not being added to the listview. I was able to fix the problem of the refresh button stretching across the entire bottom of the screen by switch from using a \texttt{RelativeLayout} to a \texttt{CoordinatorLayout} in the \texttt{fragment\_discovery} layout. Because it is in need of an update, I would like to work on the ListView adapter which will show the name of the device in large text and the ip address below in smaller text with the format, ip: [ip address]. I will use the post \footnote{\url{https://www.vogella.com/tutorials/AndroidListView/article.html}} for the task.
+\medbreak\noindent
+Something I discovered is that the application crashes when I select one of the items in the list view after pressing the refresh button. This is because the attempt to update the array list inside the \texttt{onClick} method for the fab is illegal as it is running on a separate thread. Instead a custom adapter class must be written with a definition of \texttt{notifyDataSetChanged} which will be called if data has changed or new data is available in order to update the list view.
+\medbreak\noindent
+The problem with the \texttt{ListView} not updating was resolved by calling \texttt{notifyDataSetChanged} on the \texttt{ArrayAdapter} object in the \texttt{handleMessage} method. 
+\medbreak\noindent
+At the end of the day, all issues were resolved and I am able to succesfully discover a RPi on the network with refresh implemented. Changes were pushed to the github.
 \end{addmargin}
 
 %----------------------------------------------------------------------------------------

@@ -1,0 +1,18 @@
+\babel@toc {english}{}
+\contentsline {chapter}{\nonumberline Wednesday, May 27, 2020}{5}{chapter*.2}%
+\contentsline {chapter}{\nonumberline Thursday, May 28, 2020}{7}{chapter*.3}%
+\contentsline {chapter}{\nonumberline Monday, June 1, 2020}{9}{chapter*.4}%
+\contentsline {chapter}{\nonumberline Tuesday, June 2, 2020}{11}{chapter*.5}%
+\contentsline {chapter}{\nonumberline Wednesday, June 3, 2020}{13}{chapter*.6}%
+\contentsline {chapter}{\nonumberline Thursday, June 4, 2020}{15}{chapter*.7}%
+\contentsline {chapter}{\nonumberline Friday, June 5, 2020}{17}{chapter*.8}%
+\contentsline {chapter}{\nonumberline Monday, June 8, 2020}{19}{chapter*.9}%
+\contentsline {chapter}{\nonumberline Wednesday, June 10, 2020}{21}{chapter*.10}%
+\contentsline {chapter}{\nonumberline Thursday, June 11, 2020}{23}{chapter*.11}%
+\contentsline {chapter}{\nonumberline Tuesday, June 16, 2020}{25}{chapter*.12}%
+\contentsline {chapter}{\nonumberline Wednesday, June 17, 2020}{27}{chapter*.13}%
+\contentsline {chapter}{\nonumberline Thursday, June 18, 2020}{29}{chapter*.14}%
+\contentsline {chapter}{\nonumberline Friday, June 19, 2020}{31}{chapter*.15}%
+\contentsline {chapter}{\nonumberline Monday, June 22, 2020}{33}{chapter*.16}%
+\contentsline {chapter}{\nonumberline Tuesday, June 23, 2020}{35}{chapter*.17}%
+\contentsline {chapter}{\nonumberline Wednesday, June 24, 2020}{37}{chapter*.18}%
