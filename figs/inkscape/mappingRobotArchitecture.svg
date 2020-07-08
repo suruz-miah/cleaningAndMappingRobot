@@ -13,10 +13,38 @@
    viewBox="0 0 210 297"
    version="1.1"
    id="svg8"
-   inkscape:version="1.0beta2 (2b71d25, 2019-12-03)"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    sodipodi:docname="mappingRobotArchitecture.svg">
   <defs
      id="defs2">
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="marker1388"
+       style="overflow:visible;"
+       inkscape:isstock="true">
+      <path
+         id="path1138"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#000000;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         transform="scale(0.6) rotate(180) translate(0,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Mend"
+       style="overflow:visible;"
+       inkscape:isstock="true">
+      <path
+         id="path1120"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1;fill:#000000;fill-opacity:1"
+         transform="scale(0.4) rotate(180) translate(10,0)" />
+    </marker>
     <marker
        inkscape:stockid="Arrow2Send"
        orient="auto"
@@ -451,15 +479,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2"
-     inkscape:cx="383.74097"
-     inkscape:cy="407.61146"
+     inkscape:cx="310.55047"
+     inkscape:cy="707.21144"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1680"
-     inkscape:window-height="1005"
-     inkscape:window-x="0"
-     inkscape:window-y="23"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:snap-grids="true"
      inkscape:document-rotation="0" />
@@ -776,15 +804,15 @@
        transform="rotate(90)" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9232px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.39808"
-       x="70.995857"
-       y="94.078438"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.92319965px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.39807999"
+       x="65.241173"
+       y="99.237816"
        id="text1930"><tspan
          sodipodi:role="line"
          id="tspan1928"
-         x="70.995857"
-         y="94.078438"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.39808">IR Sensor</tspan></text>
+         x="65.241173"
+         y="99.237816"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778006px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.39807999">IR Sensor</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9232px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.39808"
@@ -838,7 +866,7 @@
        style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:0.13818148;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
        r="0.23182045" />
     <path
-       style="opacity:1;fill:#93ca2f;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.02823707;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       style="opacity:1;fill:#696969;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.02823707;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
        d="m 101.83626,104.90407 c -3.410545,-0.15968 -6.413838,-0.49431 -7.471064,-0.83242 l -0.261489,-0.0837 0.224133,-0.0638 c 1.419765,-0.4045 4.830785,-0.75877 8.14346,-0.8458 0.86291,-0.0227 1.70863,-0.0559 1.8794,-0.0737 l 0.31045,-0.0325 0.0519,0.44694 0.0519,0.44693 2.28989,-0.0198 2.28989,-0.0198 0.0655,-0.43583 c 0.0593,-0.39485 0.0804,-0.43185 0.22413,-0.39325 0.0873,0.0234 0.67138,0.043 1.29803,0.0436 l 1.13933,10e-4 v 0.25616 c 0,0.44132 0.11716,0.49096 1.15906,0.49096 h 0.92425 l 0.023,0.31751 0.023,0.31752 0.69107,0.0215 0.69108,0.0215 v -0.339 -0.33901 h 0.96862 c 0.86917,0 0.97626,-0.0143 1.04326,-0.1395 0.0704,-0.13151 0.11006,-0.13386 0.6937,-0.0411 0.75555,0.12019 1.71608,0.34111 1.67251,0.38467 -0.0175,0.0175 -0.27857,0.0946 -0.58005,0.17124 -1.21736,0.30938 -3.99277,0.59231 -7.30944,0.74514 -1.83188,0.0845 -8.38944,0.0808 -10.23535,-0.006 z"
        id="path3841"
        inkscape:connector-curvature="0" />
@@ -974,8 +1002,8 @@
        id="path1400"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.4;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1480);stroke-miterlimit:4;stroke-dasharray:none"
-       d="m 80.494898,95.271642 c 9.868927,9.588298 9.868927,9.588298 9.868927,9.588298"
+       style="fill:none;stroke:#000000;stroke-width:0.4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1480)"
+       d="M 74.943041,100.79005 C 90.331,104.98332 90.331,104.98332 90.331,104.98332"
        id="path1422"
        inkscape:connector-curvature="0" />
     <path
@@ -993,6 +1021,57 @@
        d="m 139.42783,93.073351 c -20.06526,6.828734 -20.06526,6.828734 -20.06526,6.828734"
        id="path1494"
        inkscape:connector-curvature="0" />
+    <rect
+       style="opacity:1;fill:#696969;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.40000001;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       id="rect1089"
+       width="2.0345926"
+       height="2.9232543"
+       x="93.466232"
+       y="101.09204"
+       ry="0" />
+    <path
+       style="fill:#71cc69;fill-opacity:1;stroke:#000000;stroke-width:0.40000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 91.040296,99.192989 c 0,2.549081 0,2.549081 0,2.549081 l 2.425938,-0.65003 v -1.431329 z"
+       id="path1091"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 88.438223,99.104226 C 90.284742,99.599 90.284742,99.599 90.284742,99.599"
+       id="path1097"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 88.484996,100.67109 c 1.683798,0 1.683798,0 1.683798,0"
+       id="path1099"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 88.516333,102.16592 c 1.612342,-0.43202 1.612342,-0.43202 1.612342,-0.43202"
+       id="path1103"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="opacity:1;fill:#696969;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.40000001;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       id="rect1107"
+       width="2.0345912"
+       height="1.4313326"
+       x="93.466232"
+       y="99.660706" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1388)"
+       d="M 79.652116,90.121074 C 90.61639,97.76014 90.61639,97.76014 90.61639,97.76014"
+       id="path1109"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="63.0145"
+       y="88.361282"
+       id="text5210"><tspan
+         sodipodi:role="line"
+         id="tspan5208"
+         x="63.0145"
+         y="88.361282"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777767px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;writing-mode:lr-tb;text-anchor:start;stroke-width:0.26458332">Disinfectant Sprayer</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
