@@ -489,7 +489,221 @@ Something I discovered is that the application crashes when I select one of the 
 The problem with the \texttt{ListView} not updating was resolved by calling \texttt{notifyDataSetChanged} on the \texttt{ArrayAdapter} object in the \texttt{handleMessage} method. 
 \medbreak\noindent
 At the end of the day, all issues were resolved and I am able to succesfully discover a RPi on the network with refresh implemented. Changes were pushed to the github.
-\end{addmargin}
+
+\labday{Thursday, June 25, 2020}
+In the biweekly meeting, it was brought up that a disinfection device will be added to the robot consisting of a stepper motor and a pump attached to a tank filled with disinfectant.
+
+\labday{Friday, June 26, 2020}
+To improve the flow of the app, I worked on adding a local database to the app using Room which provides an abstraction layer over SQLite\footnote{\url{https://developer.android.com/training/data-storage/room}}. Data access objects which must be coded in a Java interface to provide access to the database through methods. To add library support to the project, I included the following in the \texttt{build.gradle} file:
+\begin{Verbatim}
+  def room_version = "2.2.5"
+
+  implementation "androidx.room:room-runtime:$room_version"
+  annotationProcessor "androidx.room:room-compiler:$room_version" 
+  // For Kotlin use kapt instead of annotationProcessor
+
+  // optional - Kotlin Extensions and Coroutines support for Room
+  implementation "androidx.room:room-ktx:$room_version"
+
+  // optional - RxJava support for Room
+  implementation "androidx.room:room-rxjava2:$room_version"
+
+  // optional - Guava support for Room, including Optional and ListenableFuture
+  implementation "androidx.room:room-guava:$room_version"
+
+  // Test helpers
+  testImplementation "androidx.room:room-testing:$room_version"
+\end{Verbatim}
+Next, I created a class called \texttt{Robot} that represents a table called \texttt{Robot} with the following columns
+\begin{itemize}
+\item id
+\item name
+\item ip
+\end{itemize}
+Secondly, I created a database access object titled \texttt{RobotDao} which contains the following methods:
+\begin{itemize}
+\item \texttt{getAll()} which selects rows from the \texttt{Robot} table
+\item \texttt{loadByIds()} selects rows from the \texttt{Robot} table according to ids
+\item \texttt{insert()} which will inserts its parameters into the database
+\item \texttt{delete()} will delete its parameters from the database
+\end{itemize}
+
+\labday{Monday, June 29, 2020}
+I was able to determine how to instantiate a new database and perform queries on it using the \texttt{RobotDao} interface. What I need to figure out is how to only insert into the database if the entry to be inserted is unique. For this I wrote the Query method in the \texttt{RobotDao} class titled \texttt{loadByIp} that will select all entries in the database that that have ip equal to the same ip that was recently discovered by the app using multicasting:
+\begin{Verbatim}
+@Query("SELECT * FROM Robot WHERE ip = :ip")
+List<Robot> loadByIp(String ip);
+\end{Verbatim}
+The problem is I don't know if the query will return null if it fails. For this I will simply try to use the logcat facility which allows printing log messages with a given \texttt{TAG}.
+\medbreak\noindent
+However, when compiling the app, I ran into the compile time error:
+\begin{Verbatim}
+error: annotation value must be a class literal
+\end{Verbatim}
+which was resolved by changing the annotation 
+\begin{Verbatim}
+@Database(entities = (Robot.class), version = 1)
+\end{Verbatim}
+to 
+\begin{Verbatim}
+@Database(entities = {Robot.class}, version = 1)
+\end{Verbatim}
+However, no log message were printing to the logcat with the line 
+\begin{Verbatim}
+Log.d(TAG, "Size of List: " + Integer.toString(robotsWithIp.size()));
+\end{Verbatim}
+which will need to be debugged.
+
+\labday{Tuesday, June 30, 2020}
+When using the \texttt{loadByIp} method, it will return a List of size $0$ if a robot with the provided ip is not found in the database. This is the condition that will be checked before adding a new entry to the database when refreshing or on creation of the discovery fragment. In order to avoid adding multiple copies of the same device to the ListView I used a counter variable that gets incremented once when a device is added whether it be loaded from the database or directly from a multicast request:
+\begin{Verbatim}[tabsize=4]
+if(mTaskCounterVar == 0) {
+	if(robotsWithIp.size() == 0) {
+		ipArrayList.add(recvMsg + ": " + ip);
+		Robot robot = new Robot(recvMsg, ip);
+		db.robotDao().insert(robot);
+		mTaskCounterVar++;
+		// Else load the robot from the database
+	} else if (robotsWithIp.size() > 0) {
+		for(Robot robot : robotsWithIp) {
+			if(robot != null) {
+				ipArrayList.add(robot.name + ": " + robot.ip);
+			}
+		}
+		mTaskCounterVar++;
+	}
+}
+\end{Verbatim}
+Next, what I would like to do is add a feature to be able to switch to the map view when clicking on a device in the list view. Something that Jaden brought up in a meeting yesterday is it would be nice to require some sort of passcode in order to control the robot in case multiple people are connected to the robot at the same time. However, this might be a feature we could add later.
+\medbreak\noindent
+From the post \footnote{\url{https://stackoverflow.com/questions/23212162/how-to-move-from-one-fragment-to-another-fragment-on-click-of-an-imageview-in-an}}, I was able to research some of the classes need to switch fragment views.
+
+\labday{Thursday, July 2, 2020}
+The code from user GvSharma was pasted into the \texttt{onItemClick} method for each of the listView elements:
+\begin{Verbatim}
+Fragment fragment = new MapFragment();
+FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+fragmentTransaction.replace(R.id.content_map,fragment);
+fragmentTransaction.addToBackStack(null);
+fragmentTransaction.commit();
+\end{Verbatim} 
+Different code may likely be needed for the listview elements as the code above is meant for buttons objects. Just as a test a placed the above code in the listener for the floating action button; however, to no avail. I posted a question on Stack Overflow to see if anyone had any solutions.
+
+\labday{Monday, July 6, 2020}
+One of the comments in response to the Stack Overflow post was that the \texttt{ListView} is out of date and should be replaced by a \texttt{RecyclerView} view object. The first goal will be to switch over to this more up to date and flexible object. The first step is to make the replacement in the layout file for the discovery view. What needs to be done fragment is the follow:
+\begin{itemize}
+\item Get a handle to the RecyclerView using \texttt{findViewById}
+\item Call \texttt{setHasFixedSize} if the recycler content does not change the size of each entry
+\item Instantiate a \texttt{LayoutManager} object and set it on the recyclerview object using \texttt{setLayoutManager}
+\item Specify an adapter on the recycler view using an adapter class that extends RecyclerView.Adapter
+\end{itemize}
+Secondly, I rewrote the \texttt{DiscoveryArrayAdapter} to extend from \texttt{RecyclerView.Adapter} \footnote{\url{https://developer.android.com/guide/topics/ui/layout/recyclerview}}. The class contains an inner class titled \texttt{ViewHolder} which inherits from\\
+\texttt{RecyclerView.ViewHolder}. The following method were also added:
+\begin{itemize}
+\item Constructor assigning the string array list passed in to the class level array list
+\item \texttt{onCreateViewHolder} override invoked by the layout manager which will get an instance of the \texttt{MyViewHolder} inner class
+\item \texttt{onBindViewHolder} invoked by the layout manager which will take the data passed and assign in to the two \texttt{TextView} objects inflated by the adapter
+\item \texttt{getItemCount} override which will return the size of the internal array list 
+\end{itemize}
+
+\labday{Tuesday, July 7, 2020}
+I received another comment on my post regarding switching between tabs in the tab layout. The user suggested that I do not need TabLayout if I simply want to switch between fragments. An even better idea would be to simply use activities instead fragments for switching between discovering devices and the map view. I will create a new app to test this out in. Also, I would like to use inspiration from the first app tutorial on the android developer site\footnote{\url{https://developer.android.com/training/basics/firstapp/starting-activity}}. However, the code I wrote yesterday to migrate the \texttt{ListView} over to a \texttt{RecyclerView} worked perfectly as intended. As a small step away from the current task, I want to get the onclick listener for the recycler view working. To do this, the \texttt{setOnClickListener} method of the \texttt{View} object that starts the fragment is defined as follows.
+\begin{Verbatim}
+holder.mView.setOnClickListener(new View.OnClickListener() {
+	@Override
+	public void onClick(View v) {
+		Toast.makeText(mContext,"Hello at " + 
+		Integer.toString(position),
+		Toast.LENGTH_SHORT).show();
+	}
+});
+\end{Verbatim}
+Instead of having a toast, I will simply create a new \texttt{Intent} object to move to another activity once the app is migrated over from using the \texttt{TabLayout}. 
+\medbreak\noindent
+After the new Android studio project was started, I worked on figuring how to customize the tool bar. This was done by first changing the project settings. To not have an action bar in the styles.xml file. Next a Toolbar was added in the \texttt{main\_activity.xml} file. However, the once I copied all the code from the project using two tabs into the project using only activities, a problem was encountered as no items were being added to the recycler view.
+\medbreak\noindent
+I discovered the source of the problem to be that the first entry in the RecyclerView is being hidden by the toolbar in the main activity layout. Therefore, I need to determine how to constrain the top of the Recycler view to the bottom of the toolbar. A more complicated approach was taken by using the \texttt{AppBarLayout} which also creates a nested \texttt{CollapsingBarLayout}. In all, this allows the top activity bar to be expanded and collapsed. Soon I will get the map activity hooked up to the on click listener for the recycler view items.
+
+\labday{Wednesday, July 8, 2020}
+In the \texttt{DiscoveryArrayAdapter} class, I added code to launch another activity from an Intent in the \texttt{onClick} listener for each \texttt{RecyclerView} item. The following code was added:
+\begin{Verbatim}
+Intent intent = new Intent(mContext, MapActivity.class);
+intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+mContext.startActivity(intent);
+\end{Verbatim}
+The flag \texttt{FLAG\_ACTIVITY\_NEW\_TASK} is needed as the activity is being started from outside an activity context. After the toolbar was succesfully added in the \texttt{MapActivity} class, a back arrow was added in the upper left hand corner using the following code:
+\begin{Verbatim}
+getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+getSupportActionBar().setDisplayShowHomeEnabled(true);
+toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+	@Override
+	public void onClick(View v) {
+		finish();
+	}
+});
+\end{Verbatim}
+What I would like to determine is how to make the toolbar not expandable or collapsible. This causes a problem with the back arrow not being visible until the toolbar is fully expanded. I simply needed to remove the inner view from the AppBarLayout view that the TabLayout is nested under.
+\medbreak\noindent
+To change the text color of the AppBar I added a new style to the \texttt{styles.xml} which gives the text and back button a color of white. Lastly, I would like to add multiple threads to the python application to have one receiver thread and multiple direct app communication threads. A possible demo could be toggling an LED of the RPi.
+
+\labday{Thursday, July 9, 2020}
+I worked on copying over the code and project structure from the second project to the \texttt{LidarMappingRobot} project we use for the Github repository for the first part of today. After this was finished, I began working on how to remove a robot from the recycler view when the receiver program is closed. What I will need to determine is how to remove from the string array list \texttt{mArrayList} using the \texttt{remove} method once it is found that the robot is no longer available. I added a new query to the \texttt{RobotDao} to load all the ips from the Robot database. 
+
+\labday{Saturday, July 11, 2020}
+The algorithm is documented below for the \texttt{FindRobotTask} class that implements \texttt{Runnable}:
+\begin{itemize}
+\item "Nuke" the table (i.e. delete everything from the \texttt{Robot} table)
+\item Load all ips from the database
+\item Search for devices receiving on $(224.3.29.71, 10000)$.
+\item If the IP of the host (robot) matches an IP already in the database, load the device from the database.
+\item Else if the IP of the host (robot) is not already in the database, add the device including the name and IP to the database.
+\item Loop through all the IP addresses in the database and test whether a match is found each time a multicast request is sent out. If a given IP is not found, look up its corresponding ID and remove it from the RecyclerView. Else do nothing. Somehow the ID will need to correspond to the position of the item in the \texttt{RecyclerView}.   
+\end{itemize}
+One additional algorithm/method that will need to be written is how to check whether any elements in a \texttt{List} type don't exist in a second \texttt{List} type (\texttt{ArrayList}). Both of these \texttt{List}s will contain IP address, the dbIps List may contain robots that are disconnected. A useful method is the \texttt{List.contains} method which checks if a \texttt{List} contains an object. However, at the end of the day, after adding the necessary code, no robots were being removed from the \texttt{RecyclerView} and none were being added properly in the background threads.
+
+\labday{Monday, July 13, 2020}
+Because one of the main tasks now is to design a robot in OpenSCAD with multiple different sensors and a disinfectant sprayer, I worked on prototyping the model in OpenSCAD. For a simplicity and a tight turning radius, I would like the robot to have two powered side wheels with a single caster wheel in the front. Both wheels will be powered with an h-bridge motor driver for rotation in two directions. I high level design I am considering is based off~\footnote{\url{https://store.arduino.cc/usa/arduino-robot}}. 
+
+\labday{Tuesday, July 14, 2020}
+Half of the today was spent working on the app and fixing the bug of devices not showing up in the discovery activity. For this purpose I worked on writing log message to logcat with the statement
+\begin{Verbatim}
+Log.d(TAG,message);
+\end{Verbatim}
+Debug log messages cannot be sent to the logcat as they are not loggable. Instead, I use info messages. A mistake I made was including a filter in the logcat. Once no filter was applied. Everything appeared to be fixed and log messages were visible. The problem appears to be in the \texttt{FindRobotTask} where I continue looping with no stopping condition:
+\begin{Verbatim}
+for(int i = 0; i < 10; i++) {
+	boolean uniqueIp = false;
+	DatagramPacket recv = new DatagramPacket(buf, buf.length);
+	sock.receive(recv);
+	ip = recv.getAddress().getHostAddress();
+	recvMsg = new String(recv.getData(), 0, recv.getLength());
+
+	// If the IP is not in the database and not the localhost address, 
+	// add it.
+	if(!dbIps.contains(ip) && !ip.equals(localIpAddress)) {
+		foundIps.add(ip);
+		Robot robot = new Robot(recvMsg, ip);
+		db.robotDao().insert(robot);
+	}
+}
+\end{Verbatim}
+A simple solution to this problem is to simply add a break statement after \texttt{db.robotDao().insert(robot);} which will break out of the loop once a robot has been found. This fixes the problem if the receiver program is running. However, if not, then the app will timeout and problems will occur: causing the app to still display previous robot running. A potential but kind of bad solution is to use
+\begin{Verbatim}
+MulticastSocket.setSoTimeout(int timeout);
+\end{Verbatim}
+which will set the timeout in milliseconds.
+\medbreak\noindent
+Another problem I am facing is how the device will not show up after shutting down the receiver program and restarting it. The device however will disappear from the view if the receiver program is stopped (using CTRL + C). Another problem arose when attempting to refresh when the device is already listed on the display as a \texttt{SocketException} is thrown 
+when the call to \texttt{receive} times out.
+
+\labday{Wednesday, July 15, 2020}
+Prototyping on the new robot was worked on today. What will likely need to be changed is the wheel positions as they collide with the bottom base. Potential solutions include moving the wheels partially into the base with two horizontal slots similar to the configuration by Arduino. Axles will be connected to the wheels through DC motors mounted to the bottom side of the base. Power wires will be connected to the motors from the Beaglebone. Below is the current model of the robot in OpenSCAD.
+\begin{figure}[H]
+\center
+\includegraphics[scale=0.5]{figs/img/cleaningRobotModel7152020}
+\end{figure}
+\end{addmargin} 
 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
