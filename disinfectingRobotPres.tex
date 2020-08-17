@@ -61,7 +61,7 @@
 \usepackage{pgfgantt}
 
 
-\title[Design Proposal]{Disinfecting Robot Design Plan Proposal}
+\title[Design Proposal]{Cleaning, Mapping, and Disinfecting Robot Design Proposal}
 
 % % A subtitle is optional and this may be deleted
 % \subtitle{Product Proposal}
@@ -142,12 +142,27 @@ Advisors: Dr. Suruz Miah}
 \end{figure}
 \end{frame}
 
+\begin{frame}{Introduction}{}
+\begin{itemize}
+	\item The proposed robot will offer a modular design and open source architecture
+	\item Dissamebly will be one of the key features allowing parts to be added or changed
+	\item Software and hardware will be completely open source
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Introduction}{}
+\begin{itemize}
+	\item Robot will include a disinfectant sprayer in case a room is unsafe to be cleansed with UV light
+	\item Vacuuming feature will be added to further set the robot apart from its commercial counter parts
+\end{itemize}
+\end{frame}
+
 \section{Current Design}
 \begin{frame}{Current Design}{}
 \begin{figure}
     \centering
     \includegraphics[scale=0.3]{figs/img/frontViewScreenshotA}
-    \caption{Side view of the proposed robot design}
+    \caption{Side view of the current robot design}
     \label{fig:sideViewRobot}
 \end{figure}
 \end{frame}
@@ -156,7 +171,7 @@ Advisors: Dr. Suruz Miah}
 \begin{figure}
 	\centering
 	\includegraphics[scale=0.3]{figs/img/bottomViewScreenshotA}
-	\caption{Bottom view of the proposed robot design}
+	\caption{Bottom view of the current robot design}
 	\label{fig:bottomViewRobot}
 \end{figure}
 
@@ -176,7 +191,7 @@ Advisors: Dr. Suruz Miah}
 %	\gantttitlelist{7,...,12}{1} \\
 	\gantttitlecalendar{year,month}\\
 	\ganttbar{Redesign outer shell of the robot}{2020-08}{2020-09} \\
-	\ganttlinkedbar{Determine sensors to use}{2020-10}{2020-11} \ganttnewline
+	\ganttlinkedbar{Design vacuuming system}{2020-09}{2020-10} \ganttnewline
 	\ganttlinkedbar{Create mount points for sensors}{2020-10}{2020-11} \ganttnewline
 	\ganttlinkedbar{Design disinfectant sprayer mechanism}{2020-11}{2020-12} \ganttnewline
 	\ganttlinkedbar{Design caster and drive wheel mounts}{2020-12}{2021-01}
@@ -190,34 +205,34 @@ Advisors: Dr. Suruz Miah}
 		vgrid,
 		time slot format=isodate-yearmonth,
 		time slot unit=month
-	]{2021-01}{2021-05}
+	]{2020-11}{2021-05}
 	\gantttitlecalendar{year,month}\\
 	\ganttbar{Develop power delivery system}{2021-01}{2021-02} \\
-	\ganttlinkedbar{Create system for connections with the onboard SBC}{2021-02}{2021-03} \ganttnewline
+	\ganttlinkedbar{Create connections with the onboard SBC}{2021-02}{2021-03} \ganttnewline
 	\ganttlinkedbar{Develop software and firmware}{2021-03}{2021-04}
 \end{ganttchart}
 \end{frame}
 
-% All of the following is optional and typically not needed. 
-\appendix
-\section<presentation>*{\appendixname}
-\subsection<presentation>*{For Further Reading}
-
-\begin{frame}[allowframebreaks]
-  \frametitle<presentation>{References}
-    
-  \begin{thebibliography}{10}
-    
-  \setbeamertemplate{bibliography item}[online]
-  
-  \bibitem{ieeespec}
-  Autonomous Robots Are Helping Kill Coronavirus in Hospitals
-  \newblock \texttt{https://spectrum.ieee.org/automaton/robotics/
-  medical-robots/autonomous-robots-are-helping-kill-
-  coronavirus-in-hospitals}
-
-	\end{thebibliography}
-\end{frame}
+%% All of the following is optional and typically not needed. 
+%\appendix
+%\section<presentation>*{\appendixname}
+%\subsection<presentation>*{For Further Reading}
+%
+%\begin{frame}[allowframebreaks]
+%  \frametitle<presentation>{References}
+%    
+%  \begin{thebibliography}{10}
+%    
+%  \setbeamertemplate{bibliography item}[online]
+%  
+%  \bibitem{ieeespec}
+%  Autonomous Robots Are Helping Kill Coronavirus in Hospitals
+%  \newblock \texttt{https://spectrum.ieee.org/automaton/robotics/
+%  medical-robots/autonomous-robots-are-helping-kill-
+%  coronavirus-in-hospitals}
+%
+%	\end{thebibliography}
+%\end{frame}
 
 \begin{frame}{}{}
 \Huge
