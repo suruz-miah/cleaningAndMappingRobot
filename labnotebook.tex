@@ -703,6 +703,179 @@ Prototyping on the new robot was worked on today. What will likely need to be ch
 \center
 \includegraphics[scale=0.5]{figs/img/cleaningRobotModel7152020}
 \end{figure}
+
+\labday{Thursday, July 16, 2020}
+To correct the problem of the robot getting removed after detecting for the first time, a rule will be set in place that the SBC must broadcast "iRobot Create 2". However, a \texttt{SocketTimeoutException} is still being thrown when the app attempts to receive data:
+\begin{Verbatim}
+2020-07-16 11:50:32.401 26129-26299/com.example.lidarmappingrobot 
+I/MainActivity: IOException thrown in FindRobotTask
+    java.net.SocketTimeoutException: Poll timed out
+        at libcore.io.IoBridge.poll(IoBridge.java:691)
+        at java.net.PlainDatagramSocketImpl.doRecv
+        (PlainDatagramSocketImpl.java:149)
+        at java.net.PlainDatagramSocketImpl.receive0
+        (PlainDatagramSocketImpl.java:140)
+        at java.net.AbstractPlainDatagramSocketImpl.receive
+        (AbstractPlainDatagramSocketImpl.java:143)
+        at java.net.DatagramSocket.receive(DatagramSocket.java:847)
+        at com.example.lidarmappingrobot.MainActivity
+        $FindRobotTask.run(MainActivity.java:148)
+        at java.lang.Thread.run(Thread.java:764) /$
+\end{Verbatim}
+Further problems still exist as the robot listing disappears every time the view is refreshed. 
+\medbreak\noindent
+A pause was placed on the app to work on the Python program. Simply, a new thread is created for creating a TCP connection to the client after the IP address of the phone is retrieved. However, after running the lines:
+\begin{Verbatim}
+	ip = address[0]
+	sock_obj = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	port = random.randint(20000, 50000)
+	print(port)
+	sock_obj.bind((ip,port))	
+\end{Verbatim}
+The \texttt{Cannot assign requested address} error is thrown. What I am trying to do is open up a direct connection between the app and robot. Since this method does not appear to work, I will simply write a server for the app that is constantly running and accepting connections. Then a new thread will be created for each subsequent connected device.
+
+\labday{Friday, July 17, 2020}
+I rewrote the Python program to have three different functions:
+\begin{itemize}
+\item \texttt{multicastListeningThread} which will simply listen for multicast messages from phones on group ('224.3.29.71', 10000)
+\item \texttt{appListeningThread} which listens for phone connections by TCP once they have identified the SBC by a multicast request
+\item \texttt{appCommunicationThread} which will be started when a new phone connects to the board and will process data sent by each phone. Each phone connected to the board will have its own \texttt{appCommunicationThread}.
+\end{itemize}
+Although the BeagleBone is the target platform for this program, I added another function called \texttt{gpioInit} which will set up the GPIO connections on the Raspberry Pi. 
+\medbreak\noindent
+In the \texttt{MapActivity} class of the app, I wrote an inner "task" class that implements \texttt{Runnable}
+
+\labday{Tuesday, July 21, 2020}
+A prototype of the UV disinfection device was worked on today. A possible change I would like to make is using Creo as a student license is available rather than OpenSCAD.
+
+\labday{Wednesday, July 22, 2020}
+Just to get a basic demonstration of app communication, I worked on getting communication between my app and the RPi working by toggling an LED on and off. In order to toggle a GPIO pin on and off with the \texttt{RPi.GPIO} library, the following code is used:
+\begin{Verbatim}
+GPIO.output(CHANNEL,GPIO.HIGH)
+time.sleep(1)
+GPIO.output(CHANNEL,GPIO.LOW)
+time.sleep(1)
+\end{Verbatim}
+What will need to be determined is how to write strings through a socket in java. The following can be used for this purpose \footnote{\url{https://gist.github.com/chatton/8955d2f96f58f6082bde14e7c33f69a6}}:
+\begin{Verbatim}
+Socket socket = new Socket("localhost", 7777);
+OutputStream dataOutputStream = socket.getOutputStream();
+dataOutputStream.writeUTF("yo");
+dataOutputStream.flush();
+dataOutputStream.close();
+\end{Verbatim}
+The problem I am encountering is when strings get sent over from the app to the RPi, they contain non-ascii characters and unintended spaces upon arrival.
+
+\labday{Friday, July 24, 2020}
+From the meeting on Thursday:
+\begin{itemize}
+\item Design a place for the UV light emitter holder on the robot
+\item Determine how to mount both the LIDAR sensor and the UV light
+emitter together on the top plate of the robot
+\item Focus majority of efforts for now on the app because the Roomba is what
+will be worked on first
+\end{itemize}
+Today, some work was done on fixing the problem of the robot listing disappearing after refreshing. The problem I discovered is in the following code block:
+\begin{Verbatim}[tabsize=4]
+for(int i = 0; i < 10; i++) {
+	DatagramPacket recv = new DatagramPacket(buf, buf.length);
+	sock.receive(recv);
+	ip = recv.getAddress().getHostAddress();
+	recvMsg = new String(recv.getData(), 0, recv.getLength());
+
+	if(recvMsg.equals("iRobot Create 2")) {
+		// Check if the IP is already in the database or
+		// is the local IP address
+		if(!dbIps.contains(ip) && !ip.equals(localIpAddress)) {
+			// Denote the IP address as a found IP
+			foundIps.add(ip);
+
+			// Construct a new Robot object and insert into the database.
+			Robot robot = new Robot(recvMsg, ip);
+			db.robotDao().insert(robot);
+		}
+		break;
+	}
+}
+
+// Compare the foundIps and dbIps lists to check if there are any
+// robots in dbIps that are not in foundIps. If so, remove it.
+ArrayList<Robot> disconnectedRobots = new ArrayList<Robot>();
+for(String dbIp : dbIps) {
+	if(!foundIps.contains(dbIp)) {
+		List<Robot> disconnectedRobotsTemp = db.robotDao().loadByIp(dbIp);
+		disconnectedRobots.addAll(disconnectedRobotsTemp);
+	}
+}
+\end{Verbatim}
+Inside the for loop, the \texttt{foundIps} string array list is appended to only if there is not already a Robot containing the IP in the database and the IP is not the device's IP address. Simply by adding the line
+\begin{Verbatim}
+foundIps.add(ip); 
+\end{Verbatim}
+above the conditional statement
+\begin{Verbatim}
+if(recvMsg.equals("iRobot Create 2")
+\end{Verbatim}
+the problem of the device disappearing regularly after refreshing mostly was fixed. However, at times a socket timeout exception is thrown causing the device to disappear.
+\medbreak\noindent
+What needs to be done next is to determine how to pass the IP to the MapActivity through the \texttt{Intent} object. Quite simply, the \texttt{mRobotList} can be parsed to retrieve the correct IP by indexing the correct position of the arraylist. Then, this IP can be passed to the Intent with a call to \texttt{putExtra} and retrieved with \texttt{getStringExtra}. One of the problems I am encountering is that the app will crash when pressing the ON/OFF button in the map activity task due to a null reference exception.
+
+\labday{Monday, July 27, 2020}
+The null reference exception was fixed by correcting a reference to the \texttt{mIPAddress} class level variable by changing 
+\begin{Verbatim}
+String mIPAddress = intent.getStringExtra("ROBOT_IP");
+\end{Verbatim}
+to 
+\begin{Verbatim}
+mIPAddress = intent.getStringExtra("ROBOT_IP");
+\end{Verbatim}
+in the \texttt{onCreate} method of the \texttt{MapActivity} class. An LED was able to be succesfully toggled when clicking the ON/OFF button in the app. One of the potential problems is the fact that a small amount of delay occurs between when the button is pressed in the app and when the LED is toggled on or off. A second problem that needs to be solved is the exception:
+\begin{Verbatim}[tabsize=4]
+Exception in Thread-2:
+Traceback (most recent call last):
+	File "/usr/lib/python3.7/threading.py", line 917, in _bootstrap_inner
+		self.run()
+	File "/usr/lib/python3.7/threading.py", line 865, in run
+		self._target(*self.args, **self._kwargs)
+	File "receiver.py", line 46, in appListeningThread
+		server_sock.bind('',APP_LISTENING_THREAD_PORT))
+OSError: [Errno 98] Address already in use
+\end{Verbatim}
+This occurs when the program is interrupted with CTRL+C or in Python the KeyboardInterrupt. Somehow the server is not being shutdown properly when the program is interrupted. I attempted to add a try, except statement for the KeyboardInterrupt inside the while loop waiting for connections, but the problem still persisted. The main issue is likely that the superloop lies inside a thread. From StackOverflow~\footnote{\url{https://stackoverflow.com/questions/6380057/}}, a user suggests adding the line
+\begin{Verbatim}
+server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+\end{Verbatim}
+before binding. This issue occurs because the program containing the socket creation was executed too many times with too small of a delay between executions causing the socket to be left in a TIME\_WAIT state \footnote{\url{https://docs.python.org/3.3/library/socket.html}}. At this point the program is no longer throwing the above exception.
+
+\labday{Tuesday, July 28, 2020}
+Brian. Today some time was spent researching the pycreate2 python library that Jaden discovered\footnote{\url{https://github.com/MomsFriendlyRobotCompany/pycreate2}}. In order to drive the robot forward or backward or turn right or left, the \texttt{Create2.drive\_direct} method must be called with \texttt{r\_vel} or right wheel velocity and \texttt{l\_vel} or left wheel velocity passed as parameters. The velocity parameters are in mm/sec and clamped within the range (-500, 500) where -500 and 500 mm/sec are not included. Negative velocities denote rotation in the reverse direction while positive velocities denote rotation in the forward direction. This make it possible to turn the robot in place left or right, move backward, and forward. The user interface will have buttons for moving forward, backward, left and right. 
+
+\labday{Wednesday, July 30, 2020}
+Work was done on the app to control the robots movement. An initial step to this process was adding some code to the \texttt{receiver.py} program to allow connection and control of the robot over a serial connection. The constant speed of the robot will be set to 100 mm/sec. This value may need to be tweaked for steering speed. Some algorithms will need to be developed for allowing the robot to follow a pre-programmed path after hitting the submit button in the app. A maximum of 10 instructions (left, right, forward, backward) will be able to written to the robot at a given time. Next I worked on creating icons for each of the four buttons: left, right, upward, and downward arrows. The current issue I am having is the back button is not rendering properly to the display. Later the previously used \texttt{Button} views were altered to \texttt{ImageButton} objects for better image placement inside each button. These problems were fixed after removing the bottom constraints of each of the buttons. This layout will need to be switched to another layout corresponding to the \texttt{ControlActivity} which I will need to create for manually controlling the robot's movement.
+
+\labday{Monday, August 3, 2020}
+I added a new \texttt{Activity} class titled \texttt{ControlActivity} which will handle sending queues of control commands to the robot. Instead, a different approach was taken where two tabs titled Map and Control will be added. One of the problems I am trying to solve is how to associate a layout file with a \texttt{TabItem} view. The following code can be used to get a tab item at a position and configure it with a layout file:
+\begin{Verbatim}
+TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+TabLayout.Tab tab = tabLayout.getTabAt(1);
+
+tab.setCustomView(R.layout.activity_map);
+\end{Verbatim}
+However, I do not know how to write a fragment for a given tab. I looked through the blog post \footnote{\url{https://www.techotopia.com/index.php/Creating_an_Android_Tabbed_Interface_using_the_TabLayout_Component}}. Essentially in the \texttt{DiscoveryArrayAdapter} which sets on a \texttt{setOnClickListener} for the \texttt{RecyclerView}. Inside the click listener, it should activate a new activity titled \texttt{BaseRobotActivity}. The layout inflated in this activity will include two tabs titled \texttt{Map} and \texttt{Control}. In order to set fragments for each of these tabs, a subclass of \texttt{FragmentPagerAdapter} must be written. 
+\medbreak\noindent
+However, from an email from Dr. Miah, the focus will now shift to working on the new robot prototype.
+
+\labday{Tuesday, August 4, 2020}
+I worked on researching current UV disinfecting robot designs. All of the ones I have seen seem to have very long UV lamps mounted on top that will shine around the room. Possibly, a LIDAR sensor can be mounted on top of the UV lamps.
+
+\labday{Wednesday, August 5, 2020}
+In the design, I would also like to have four wheels with front and back sets of wheels steerable via servo for precise rotation and control. Axles will connect the front and back sets of wheels together. This does have pros and cons as having large wheels will likely help with stability and prevent the robot from toppling over if it is nudged or bumped. However, one of the downsides of the design is a less tight turning radius. For now I will work on learning how to use Creo as I decided to switch to this as OpenSCAD is very limited in terms of features and Creo is a professional CAD modeling software where precise dimensions may be specified. The first tutorial I worked on was a car piston. Work was started on modeling the chassis of the robot which simply consists of a rectangular box which will house the wheels, steering system, and electronics like the single board computer and motor drivers. However, a rectangular box may not look appealing to the eye. Since changes are still being made to the design, I decided to do away with having four wheels and two sets of steering servos. Rather two wheels will be used for controlling the movement and two caster wheels. In this way, the robot can have full 360 degree rotation; however, it may not be as stable. I designed a 1.5 ft by 1 ft essentially rectangular box that will act as the first layer of the robot which will house the motors/wheels and caster wheels.
+
+\labday{Saturday, August 8, 2020}
+Amr and I met yesterday and decided to go design a differential drive robot which will consist of two driveable/controllable wheels mounted under the middle of the base and two caster wheels at the front and back mounted under the base. Because 16 sonar/ultrasonic sensors are required, the shape of the robot base will be circular rather than rectangular. One of the first tasks after working on is the caster wheels. 
+
+\labday{Monday, August 10, 2020}
+One of the problems I need to solve is where to place the LIDAR sensor on top of the middle section of the robot. Placing it on top of the UV lamp stack may be problematic as it will be greater than 3 ft above the ground.
 \end{addmargin} 
 
 %----------------------------------------------------------------------------------------
