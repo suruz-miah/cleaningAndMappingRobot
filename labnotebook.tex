@@ -77,7 +77,8 @@
 \usepackage{float}
 \usepackage[norule]{footmisc} % Removes the horizontal rule from footnotes
 \usepackage{lastpage} % Counts the number of pages of the document
-
+\usepackage{subcaption}
+\let\theHsubfigure\relax
 \usepackage[dvipsnames]{xcolor}  % Allows the definition of hex colors
 \definecolor{titleblue}{rgb}{0.16,0.24,0.64} % Custom color for the title on the title page
 \definecolor{linkcolor}{rgb}{0,0,0.42} % Custom color for links - dark blue at the moment
@@ -896,7 +897,40 @@ Some of the takeaways from the meeting:
 \item Share the Android app repository with Nicholas
 \end{itemize}
 \experiment{Lab work}
-Nicholas and I continued to work on the body design. Nicholas enlarged the wheels to 9.25 cm in radius. He added a prismatic joint conveyor belt system to allow the light to move up and down out of the robot chassis. I added a holder for the sprayer nozzle which we are to hopefully purchase off Amazon if time allows. A stepper motor will be used to control the azimuth angle of the sprayer. It will only have around 180 degrees of range for now. Nicholas continued to work on the caster wheel on the back of the robot to support the large wheel size.
+Nicholas and I continued to work on the body design. Nicholas enlarged the wheels to 9.25 cm in radius. He added a prismatic joint conveyor belt system to allow the light to move up and down out of the robot chassis. I added a holder for the sprayer nozzle which we are to hopefully purchase off Amazon if time allows. A stepper motor will be used to control the azimuth angle of the sprayer. It will only have around 180 degrees of range for now. Nicholas continued to work on the caster wheel on the back of the robot to support the larger wheel size.
+
+\labday{Monday, December 28, 2020}
+\experiment{Laboratory work}
+BL\\
+I worked on adding finding motors to drive the motors today as this is necessary in case adjustments need to be made to the size of the robot chassis to account for the disinfectant tank.
+
+\labday{Monday, January 4, 2021}
+\experiment{Laboratory work}
+BL\\
+The robot drive wheels have part number 6331K31 on the McMaster-Carr website which I will need to show to Dr. Miah in case they are too expensive at a price of \$122.05 per unit. The problem with using a UV lamp setup is the fact that UV lamps often solely use 120 V AC which be expensive and difficult to implement as many batteries will be needed to support this continuous power delivery. Dr. Miah mentioned that it is okay to have really expensive dc motors in the design currently and we need to find a way to make a universal mount for the sprayer and UV light. Some pictures of the current robot and its components are pictured below
+\begin{figure}[H]
+\begin{subfigure}{.5\textwidth}
+\centering
+\includegraphics[scale=0.5]{figs/img/v2BodyDesign}
+\subcaption{Body design}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+\centering
+\includegraphics[scale=0.3]{figs/img/v2UVLamp}
+\subcaption{UV lamp model}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+\centering
+\includegraphics[scale=0.3]{figs/img/v2UVLampConveyor}
+\subcaption{UV lamp conveyor}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+\centering
+\includegraphics[scale=0.3]{figs/img/v2SprayerMount}
+\subcaption{Disinfectant sprayer mount}
+\end{subfigure}
+\end{figure}
+We still need to redesign the sprayer mount and UV light holder to be able to hold many different types of UV lights and disinfectant sprayers.
 \end{addmargin} 
 
 %----------------------------------------------------------------------------------------
