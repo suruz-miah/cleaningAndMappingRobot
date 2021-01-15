@@ -1002,6 +1002,33 @@ Pittman GM8224D201-R2 DC Motor & 132.96 W \footnote{At nominal voltage of 24.0 V
 \end{center}
 \end{minipage}
 Overall power dissipation of 295.345 W not accounting for other components like stepper motors or servos.
+
+\labday{Friday, January 15, 2021}
+\experiment{Laboratory work}
+NS\\
+After running simulations in coppeliaSim it became apparent that five ultrasonic sensors are needed at the front of the robot to avoid bumping into objects. Brian and I talked and decide to place these new sensors in between the middle and side sensors. This effectively made the front have no blind spots. We also talked about moving away from the led UV-C modules.
+
+\experiment{Updated power consumption of the robot}
+\begin{minipage}{16cm}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Item & Power Dissipation \footnote{Maximum power dissipation} & Quantity & Total Dissipation \\
+\hline
+RPLidar S1 360$^\circ$ & 8.25 W & 1 & 8.25 W\\
+\hline
+UV-C 275 nm Seoul Viosys LED Module & 1.45 W & 4 & 5.8 W\\
+\hline
+Ultrasonic Ranging Module HC-SR04 & 0.075 W & 7 & 0.525 W\\
+\hline
+Raspberry Pi 4 Model B & 15 W & 1 & 15 W\\
+\hline
+Pittman GM8224D201-R2 DC Motor & 132.96 W \footnote{At nominal voltage of 24.0 V with peak stall current of 5.54 A} & 2 & 265.92 W\\
+\hline
+\end{tabular}
+\end{center}
+\end{minipage}
+
 \end{addmargin} 
 %----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY
