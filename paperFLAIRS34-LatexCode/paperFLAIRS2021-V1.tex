@@ -121,8 +121,39 @@ Fazel Keshtkar\textsuperscript{\rm 2}, and Md Suruz Miah\textsuperscript{\rm 1}
 \label{sec:introduction}
 
 \section{Existing Sanitizing Robots} 
+\section{Existing Sanitizing Robots} 
 \label{sec:Literature}
+There are many ways of transmitting infections disease, and studies have shown that the greatest cause of contact surface such as: remote control, door handles or cabinets, a button to call for help, etc. UV-C disinfection robot provides an economical and effective measure in limiting the spread of bacteria.  UV-C disinfection robot provides an economical and effective measure in limiting the spread of bacteria. When bacteria are exposed to UV-C light of their DNA absorbs light energy and causes cell damage that prevents new infecting others. The robot is controlled by the medical staff and the time for which disinfect a room is 10–15 min depending on the size of the room. 
 
+\subsubsection{Service Robots for Disinfection}
+In their paper, \cite{Begic2018} investigated the use of of the service robots in medicine with an emphasis on service robots for disinfection in medical institutions. They found that  disinfectant service robots are fast and effective in medical institutions.  Most imprtant;y, they found that use of the service robots reduces the risk of infection, cost of traditional cleaning and disinfection, and most importantly acquires confidence and security in medical facilities. In their paper, they investigated following service robots:
+\begin{itemize}
+	\item \textbf{Robot 'IRIS 3200 m'}
+	One of the UV light robot is \verb|IRIS 3200 m|, which  is the most powerful system for disinfecting UV light in the world. This robot   UVC generate UVC  up to 20 times the UVC output tested xenon pulse system and three times the power of other constant light competitors.
+	This robot uses  patented SmartDosage, together with the patented box Balance and PowerBoost technology allow 'iris 320m' UV lighting system of disinfection for automatically measuring conditions the room environment, such as the size of the room, temperature and humidity in order to determine in real time the appropriate dose, time, number and power of the lamp is required for complete disinfection of all while providing maximum power permitted in the United States for the production of germicidal UVC energy.
+	
+	IRIS 3200 m is ideal for the hospital which require the maximum disinfection least amount of time. Benefits 'Iris 3200 m' UV light disinfection system are: Faster treatment room, Higher productivity, More effective treatments, Highly pathogenic kills prices, Whole-room treatments, One placement, One treatment
+	
+	\item "Xenex Germ-Zapping" Robots
+	High intensity ultraviolet light is produced by xenon flash lamps across the entire disinfecting spectrum known as UV-C. This UV-C energy passes through the cell walls of bacteria, viruses and bacterial spores. The DNA, RNA and proteins inside the microorganism absorb this intense UV-C energy. Xenex Full Spectrum UV-C provides four mechanisms of damage against pathogens. 
+	The primary types of cellular damage caused by Pulsed Xenon UV are photohydration (pulling water molecules into the DNA that prevents transcription), photosplitting (breaking the backbone of the DNA), and photodimerization (improper fusing of DNA bases), all of which prevent cell replication.
+\end{itemize}
+
+\subsubsection{Wall-Following Behavior for a Disinfection Robot Using Type 1 and Type 2 Fuzzy Logic Systems}
+% https://pubmed.ncbi.nlm.nih.gov/32784888/
+\cite{Muthugaletal2020} 
+Robot-aided solutions are demanded to disinfect possibly contaminated surfaces to reduce the spread of infectious diseases. A wall disinfection robot should be capable of following a given wall while maintaining a specified distance from the wall. The ability to maintain the specified distance from the wall is crucial for the effective sterilization of the wall surface since the intensity of the disinfectant agent applied on the wall depends on the distance. The disinfectant agent can be either a sprayable liquid, a gas, or ultraviolet light directed at the wall. Therefore, this paper proposed a novel method to establish the wall-following behavior for a disinfection robot.
+The proposed method was designed in such a way that it enables a robot to follow a wall of an unknown environment by online path planning based on the range sensor information. Fuzzy logic was used for establishing the wall-following behavior based on the range sensor inputs. A Type 1 Fuzzy Logic System (T1-FLS) and an Interval Type 2 Fuzzy Logic System (IT2-FLS) were proposed in this regard. The FLSs were designed in such a way that they were generalized from the lateral distance to be maintained from a wall. Moreover, users can alter the lateral distance per the requirements without performing any redesign work of the system. The FLSs take the information perceived from range sensors as inputs and determine the linear velocity and the angular velocity of the robot required to follow a wall successfully.
+Simulations were conducted to evaluate the characteristics and performance of the proposed FLSs. Heterogeneous test cases that consisted of typical wall arrangements were considered in the simulation. According to the simulation results, both proposed FLSs (i.e., T1-FLS and IT2-FLS) were capable of adequately following walls as expected for a wall disinfection robot. A superior performance could be observed from the IT2-FLS compared to that of the T1-FLS, and this performance difference was large and statistically significant. The real-world applicability of the proposed method was verified from the simulations, and it is expected that real-world trials will be conducted in the next phase of the work.
+
+\subsubsection{UVC disinfection robot}
+%https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7556603/
+
+\cite{Guettari2020} The aim of the present work is to contribute in the fight against the spread of Covid-19, a novel human coronavirus, in hospitals, public transport, airlines, and any enclosed areas. They have adopted the physical disinfection method by using UVC light as agent. The UVC devices are studied and classified according their disinfectant units, complementary devices, combined disinfection agents, mobilities, and order types. Their finding shows that a mobile robot is the most efficient device to inactivate microorganisms, so they have developed a robot called 'i-Robot UVC'. The robot is equipped with eight UVC lamps around a central column and two lamps on the top. 
+i-Robot UVC can be controlled manually or run automatically; the robot is designed especially for all areas of hospital and any enclosed space to inactivate microorganisms. The construction of the robot involved: (1) the structural building, (2) the electronic assembling, and (3) the programming of the microcontroller and the mobile application.
+The structure was made by attaching to a central column two horizontal crows to immobilize eight UVC lamps. Two other lamps are mounted on top of the robot; the system of lamps can cover the space around the device. The power supply of the device is done with a direct voltage of 24 V which supplies energy to the UVC lamps and supplies the Arduino board and the rest of the electronic circuit.
+
+Some features of i-Robot UVC:   disinfectant time is estimation based on space,  the temperature, and the humidity rate; uses ultrasound sensor to detect and measure the distance; Using infrared sensors  to detect motion;  robot operates when people are not around and turns off the UVC lamps otherwise; using  to LiDAR sensor, the robot scans the environment and creates a digital map; this permits to optimize intervention. An operator equipped by protective suit controls the robot operation from a dashboard thanks to integrated cameras.
 
 
 
@@ -181,11 +212,13 @@ Fazel Keshtkar\textsuperscript{\rm 2}, and Md Suruz Miah\textsuperscript{\rm 1}
 \label{sec:RealTimeComputerExperiment}
 
 
-\section{Conclusion} \label{sec:conclusion}
+\section{Conclusion}
+\label{sec:conclusion}
 
 
-% \bibliographystyle{aaai}
-% \bibliography{bib/refsSuruzWeb,bib/refsMultiAgent,bib/refsRoboticsJournals,bib/refsRoboticsConferences,bib/refsGenericControl,bib/refsBooksTRTheses,bib/refsReinforcementLearningADP,bib/refsRL-Keshtkar}
+ \bibliographystyle{aaai}
+ \bibliography{bib/flairs34}
+ %{bib/refsSuruzWeb,bib/refsMultiAgent,bib/refsRoboticsJournals,bib/refsRoboticsConferences,bib/refsGenericControl,bib/refsBooksTRTheses,bib/refsReinforcementLearningADP,bib/refsRL-Keshtkar}
 
 \end{document}
 
