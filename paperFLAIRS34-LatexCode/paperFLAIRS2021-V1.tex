@@ -97,7 +97,8 @@
 %
 \setlength\titlebox{2.5in} % If your paper contains an overfull \vbox too high warning at the beginning of the document, use this
 % command to correct it. You may not alter the value below 2.5 in
-\title{Smart Sanitizing Indoor Mobile Robot: Design and Development}
+\title{Smart Sanitizing Mobile Robot using Ultra-violet Sterilization
+  Technology: A Prototype}
 %Your title must be in mixed case, not sentence case. 
 % That means all verbs (including short verbs like be, is, using,and go), 
 % nouns, adverbs, adjectives should be capitalized, including both words in hyphenated terms, while
@@ -115,13 +116,42 @@ Fazel Keshtkar\textsuperscript{\rm 2}, and Md Suruz Miah\textsuperscript{\rm 1}
 \maketitle
 
 \begin{abstract}
+
+  In this paper, we propose a design of a smart sanitizing wheeled mobile robot
+  using ultra-violet (UV) sterilization technology. The current design of the
+  robot includes exteroceptive sensors, such as sonars, a lidar, a radio-frequency
+  transceiver, and a camera. A circular-shaped UV [wavelength is in the range of
+  $200~\nano\meter$--$280~\nano\meter$ (C band)] LED light is mounted on top
+  of the robot for the purpose of sterilization in sanitizing complex indoor
+  environments. The proposed robot under development is expected to sanitize  
+  complex environments smartly in the sense that the UV LED is mounted with an actuator so that the robot can
+  easily adapt the height of the UV LED based on the map of the operating
+  environment. The performance of the robot is
+  initially tested using the commercial robot simulator in an indoor environment
+  with various complexities.   
+
 \end{abstract}
 
 \section{Introduction}
 \label{sec:introduction}
 
-\section{Existing Sanitizing Robots} 
-\label{sec:Literature}
+The design and development of a class of mobile robots in sterilizing indoor
+environments, hospitals, offices, and other indoor spaces, for example, have
+received a special attention in recent years, especially due to Coronavirus
+diseases - 2019 (COVID-19)\todo[inline]{Reference}. Recently, a class of mobile robots has been
+developed to sterilize indoor spaces using UV-C sterilization
+technology~\todo[inline]{Reference}. Most of the mobile robots developed so far in
+sanitizing indoor environments either rely on fixed-mount UV-tube or sprayers to
+disinfect areas much like a conventional cleaning robot. It is worth noting
+that, not many sanitizing robots use UV lights to disinfect robot based on the
+map of the indoor operating environment. In this paper, we develop a prototype
+of a modular and cost-effective mobile robot, where robot has the ability to
+smartly decide on the indoor space to  be sterilize based on the map. The map of
+the environment is created using sensor fusion technology much like what
+conventional autonomous robots do using range and vision sensors.
+
+
+\todo[inline]{Talk about some existing sanitizing robots available in the market}
 
 
 
