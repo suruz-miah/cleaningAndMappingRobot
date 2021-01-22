@@ -882,7 +882,7 @@ Amr and I met yesterday and decided to go design a differential drive robot whic
 One of the problems I need to solve is where to place the LIDAR sensor on top of the middle section of the robot. Placing it on top of the UV lamp stack may be problematic as it will be greater than 3 ft above the ground.
 
 \labday{Wednesday, December 23, 2020}
- Added Nicolaus Shepard to the project. Redesigned the robot body from scratch now in Fusion 360. Trying out a hing design to minimize the space taken up buy the UV lights. We also need to add an electrostatic sprayer which will be tricky given the limited amount of space on the top of the robot.
+Added Nicolaus Shepard to the project. Redesigned the robot body from scratch now in Fusion 360. Trying out a hing design to minimize the space taken up buy the UV lights. We also need to add an electrostatic sprayer which will be tricky given the limited amount of space on the top of the robot.
 
 \labday{Thursday, December 24, 2020}
 \experiment{Meeting minutes}
@@ -894,15 +894,22 @@ Some of the takeaways from the meeting:
 \item Mount for sprayer designed from scratch, use existing sprayer on the market
 \item 9.25 cm wheel radius
 \item For now only design a mount that will adjust the azimuth angle of the sprayer
-\item Share the Android app repository with Nicholas
+\item Share the Android app repository with Nicolaus
 \end{itemize}
 \experiment{Lab work}
-Nicholas and I continued to work on the body design. Nicholas enlarged the wheels to 9.25 cm in radius. He added a prismatic joint conveyor belt system to allow the light to move up and down out of the robot chassis. I added a holder for the sprayer nozzle which we are to hopefully purchase off Amazon if time allows. A stepper motor will be used to control the azimuth angle of the sprayer. It will only have around 180 degrees of range for now. Nicholas continued to work on the caster wheel on the back of the robot to support the larger wheel size.
+Nicolaus and I continued to work on the body design. Nicolaus enlarged the wheels to 9.25 cm in radius. He added a prismatic joint conveyor belt system to allow the light to move up and down out of the robot chassis. I added a holder for the sprayer nozzle which we are to hopefully purchase off Amazon if time allows. A stepper motor will be used to control the azimuth angle of the sprayer. It will only have around 180 degrees of range for now. Nicolaus continued to work on the caster wheel on the back of the robot to support the larger wheel size.
 
 \labday{Monday, December 28, 2020}
 \experiment{Laboratory work}
 BL\\
-I worked on adding finding motors to drive the motors today as this is necessary in case adjustments need to be made to the size of the robot chassis to account for the disinfectant tank.
+I worked on adding finding motors to drive the motors today as this is necessary in case adjustments need to be made to the size of the robot chassis to account for the disinfectant tank.\\
+NS\\
+I finished working on the caster wheel. The caster wheel is set to the exact right height to be make the main body level. I began work on a second design for a prismatic joint using pneumatic pistons in case the UV lamp conveyor was not modular enough.
+
+\labday{Tuesday, December 29, 2020}
+\experiment{Laboratory work}
+NS\\
+Fixed up small detail for the caster wheel. Brian and I discussed axle placement of the two front wheels and the possibility of using a rubber like filament to 3D print the front wheels.
 
 \labday{Monday, January 4, 2021}
 \experiment{Laboratory work}
@@ -1013,6 +1020,30 @@ RPLidar S1 360$^\circ$ & 8.25 W & 1 & 8.25 W\\
 UV-C 275 nm Seoul Viosys LED Module & 1.45 W & 4 & 5.8 W\\
 \hline
 Ultrasonic Ranging Module HC-SR04 & 0.075 W & 7 & 0.525 W\\
+\hline
+Raspberry Pi 4 Model B & 15 W & 1 & 15 W\\
+\hline
+Pittman GM8224D201-R2 DC Motor & 132.96 W \footnote{At nominal voltage of 24.0 V with peak stall current of 5.54 A} & 2 & 265.92 W\\
+\hline
+\end{tabular}
+\end{center}
+\end{minipage}
+
+\labday{Thursday, January 21, 2021}
+\experiment{Laboratory work}
+NS\\
+After more simulations I realized that having a sensor in the direct front while using the Braitenberg algorithm is pointless and added another front ultrasonic sensor. In total there are not six sensors at the front of the robot to avoid bumping into its surroundings. We have decided to no longer use the led UV-C for disinfection due to its low range of effectiveness.
+
+\experiment{Updated power consumption of the robot}
+\begin{minipage}{16cm}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Item & Power Dissipation \footnote{Maximum power dissipation} & Quantity & Total Dissipation \\
+\hline
+RPLidar S1 360$^\circ$ & 8.25 W & 1 & 8.25 W\\
+\hline
+Ultrasonic Ranging Module HC-SR04 & 0.075 W & 8 & 0.6 W\\
 \hline
 Raspberry Pi 4 Model B & 15 W & 1 & 15 W\\
 \hline
