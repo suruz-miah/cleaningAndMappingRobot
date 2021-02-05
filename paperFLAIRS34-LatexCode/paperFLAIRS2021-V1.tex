@@ -14,6 +14,7 @@
 \usepackage{graphics,adjustbox}
 \usepackage{tikz}
 \usepackage{subcaption}
+\usepackage{float}
 \usepackage{siunitx}
 \sisetup{unitsep = \cdot}
 
@@ -201,24 +202,15 @@ Some features of i-Robot UVC:   disinfectant time is estimation based on space, 
   \end{subfigure}
   \begin{subfigure}[b]{.5\textwidth}
     \centering
-    \includegraphics[scale=0.1]{../figs/img/v2BodyDesign}
+    \includegraphics[scale=0.3]{../figs/img/v3BodyDesign}
     \caption{Body design}
   \end{subfigure}
   \begin{subfigure}[b]{.5\textwidth}
-    \centering
-    \includegraphics[scale=0.1]{../figs/img/v2UVLamp}
-    \subcaption{UV lamp model}
+  	\centering
+  	\includegraphics[scale=0.3]{../figs/img/lidarTowerFinal}
+  	\subcaption{Lidar tower model}
   \end{subfigure}
-  \begin{subfigure}[b]{.5\textwidth}
-    \centering
-    \includegraphics[scale=0.1]{../figs/img/v2UVLampConveyor}
-    \subcaption{UV lamp conveyor}
-  \end{subfigure}
-  \begin{subfigure}[b]{.5\textwidth}
-    \centering
-    \includegraphics[scale=0.1]{../figs/img/v2SprayerMount}
-    \subcaption{Disinfectant sprayer mount}
-  \end{subfigure}
+
   \caption{Design of Proposed Sanitizing Robots.}
   \label{fig:ArchitecturesOfSanitizingRobot}
 \end{figure}
@@ -239,7 +231,12 @@ Some features of i-Robot UVC:   disinfectant time is estimation based on space, 
 
 \section{Real-Time Computer Experiment}
 \label{sec:RealTimeComputerExperiment}
-
+The proposed robot design was simulated in the commercial robot simulator known as Coppelia Sim. 
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.2]{../figs/img/copSimCap}
+\caption{CoppeliaSim simulation of the proposed robot}
+\end{figure}
 
 \section{Conclusion}
 \label{sec:conclusion}
