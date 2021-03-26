@@ -1142,7 +1142,7 @@ After multiple updates to my laptop, RoboStudio still failed to load. Exit logs 
 \\
 The error read "Server not available" "connect to server failed, please check your network".\\ 
 \\
-I was connected to BUSecure and no lidar network was shown when I clicked retry. The instructions to connect to the sensor from Slamtec showed a lidar network appearing but none did for me. After I restarted my laptop the erroe message was the same.
+I was connected to BUSecure and no lidar network was shown when I clicked retry. The instructions to connect to the sensor from Slamtec showed a lidar network appearing but none did for me. After I restarted my laptop the error message was the same.
 
 
 \labday{Monday, March 22, 2021}
@@ -1159,8 +1159,46 @@ Ran into the same "server not available" error with no wifi network showing up t
 \item 3D printer is now available to use for this project.
 \end{itemize}
 
+\labday{Friday, March 26, 2021}
+BL\\
+Nick and I met in the senior project lab to try and connect the lidar sensor to the WiFi network. However, we were not able to do this. The next thing we tried was downloading the SDK for the Lidar sensor at \url{https://www.slamtec.com/en/Support#rplidar-s1}. I compiled the SDK on my linux desktop and was able to connect to the sensor and run the motor succesfully by using the command
+
+\begin{Verbatim}
+sudo ./ultra-simple
+\end{Verbatim}
+after compiling the C++ program in the \texttt{app} directory. This program only uses a serial connection with the com port /dev/ttyUSB$0$. After looking at the README.md file which provides some documentation about the rplidar C++ library I was able to get the following C++ program started:
+\begin{Verbatim}
+// Taken from README.md
+// SDK: https://www.slamtec.com/en/Support#rplidar-s1
+
+#include "rplidar.h"
+#include <iostream>
+#include <cstdlib>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+using namespace rp::standalone::rplidar;
 
 
+int main() {
+    cout << "Connecting to lidar" << endl;
+	RPlidarDriver * lidar = RPlidarDriver::CreateDriver(DRIVER_TYPE_SERIALPORT);
+    u_result res = lidar->connect("/dev/ttyUSB0",256000);
+    if(IS_OK(res)) {
+        lidar->startMotor();
+        vector<RplidarScanMode> scanModes;
+        lidar->getAllSupportedScanModes(scanModes);
+        sleep(3);
+        lidar->stopMotor();
+        lidar->disconnect();
+    } else {
+        cerr << "Failed to connect to LIDAR" << endl;
+    }
+    RPlidarDriver::DisposeDriver(lidar);    
+}
+\end{Verbatim}
 \end{addmargin} 
 
 
