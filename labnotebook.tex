@@ -1161,7 +1161,9 @@ Ran into the same "server not available" error with no wifi network showing up t
 
 \labday{Friday, March 26, 2021}
 BL\\
-Nick and I met in the senior project lab to try and connect the lidar sensor to the WiFi network. However, we were not able to do this. The next thing we tried was downloading the SDK for the Lidar sensor at \url{https://www.slamtec.com/en/Support#rplidar-s1}. I compiled the SDK on my linux desktop and was able to connect to the sensor and run the motor succesfully by using the command
+Nic and I met in the senior project lab to try and connect the lidar sensor to the WiFi network. However, we were not able to do this. The next thing we tried was downloading the SDK for the Lidar sensor at \url{https://www.slamtec.com/en/Support#rplidar-s1}. I compiled the SDK on my linux desktop and was able to connect to the sensor and run the motor succesfully by using the command\\
+NS\\
+I tested all available networks while connecting to lidar but non worked. The issue seems to be with the software of RoboStudio as Brian was able to get it working through some code. 
 
 \begin{Verbatim}
 sudo ./ultra-simple
@@ -1199,6 +1201,20 @@ int main() {
     RPlidarDriver::DisposeDriver(lidar);    
 }
 \end{Verbatim}
+
+\labday{Thursday, April 8, 2021}
+\experiment{Meeting minutes}
+\begin{itemize}
+\item Going forward a Linux machine will be used to test the lidar.
+\item Planning to print the robot in the near future.
+\end{itemize}
+\experiment{Future Ideas}
+NS\\
+The 3D printer available to use for this project is able to pint in multiple filaments. I would like to print the robot in Polyethylene Terephthalate Glycol, PETG, as it is the most durable filament under long exposure to UVC when compared to other filaments. 
+
+
+
+
 \end{addmargin} 
 
 
